@@ -1,6 +1,7 @@
 module Algebra.Point (
     Point(..),
-    dist
+    dist,
+    centroid
 ) where
 
 import Data.List
@@ -29,8 +30,11 @@ dist p1 p2 = sqrt sumOfSquares
 -- Result:
 --      Point: Point that is the centroid of the group
 -- TODO
-centroid :: [Point] -> Point
-centroid points = Point[0]
+--centroid :: [Point] -> Point
+--
+centroid points = Point[x | x <- colSum / genericLength(points)]
     where
-        ratio = 1 / genericLength points
-        pointList = [x | y <- points, x <- coords y]
+        ratio = 1.0 / genericLength(points)
+        pointList = map coords points
+        tPointList = transpose pointList
+        colSum = map sum tPointList
