@@ -2,7 +2,8 @@ module Algebra.Point (
     Point(..),
     dist,
     centroid,
-    sse
+    sse,
+    coordSum
 ) where
 
 import Data.List
@@ -47,3 +48,11 @@ centroid points = Point centroidCoords
 --      Float: Calculated SSE
 sse :: [Point] -> Point -> Float
 sse points centroid = foldl (\acc x -> acc + (dist x centroid)^2) 0 points
+
+-- Function that finds the sum of the coordinates of a point
+-- Parameters:
+--      point: Point to be analyzed
+-- Result:
+--      Float: Sum of the coordinates of the point
+coordSum :: Point -> Float
+coordSum point = sum $ coords point
