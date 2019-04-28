@@ -1,7 +1,8 @@
 module Algebra.Point (
     Point(..),
     dist,
-    centroid
+    centroid,
+    sse
 ) where
 
 import Data.List
@@ -37,3 +38,12 @@ centroid points = Point centroidCoords
         transposedPointList = transpose pointList
         colSum = map sum transposedPointList
         centroidCoords = map (/pointLength) colSum
+
+-- Function that finds the sum of the squared euclidean distances (SSE)
+-- Parameters: 
+--      points: List of points to find the SSE from
+--      centroid: Centroid from the group
+-- Result:
+--      Float: Calculated SSE
+sse :: [Point] -> Point -> Float
+sse points centroid = foldl (\acc x -> acc + (dist x centroid)^2) 0 points
