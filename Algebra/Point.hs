@@ -29,12 +29,11 @@ dist p1 p2 = sqrt sumOfSquares
 --      points: List of points to find the centroid from
 -- Result:
 --      Point: Point that is the centroid of the group
--- TODO
---centroid :: [Point] -> Point
---
-centroid points = Point[x | x <- colSum / genericLength(points)]
+centroid :: [Point] -> Point
+centroid points = Point centroidCoords
     where
-        ratio = 1.0 / genericLength(points)
+        pointLength = fromIntegral (length(points))
         pointList = map coords points
-        tPointList = transpose pointList
-        colSum = map sum tPointList
+        transposedPointList = transpose pointList
+        colSum = map sum transposedPointList
+        centroidCoords = map (/pointLength) colSum
