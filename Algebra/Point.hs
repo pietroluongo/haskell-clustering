@@ -110,13 +110,13 @@ getSecondPoint points initial = fst $ head maxDistPoint
 getCentroids :: (Eq a, Num a) => [[Double]] -> a -> [[Double]]
 getCentroids points k
     | k == 0 = []
-    | otherwise = (coords $ fst closest):getCentroids (remove points $ coords $ fst closest) (k-1)
+    | otherwise = (coords $ fst furthest):getCentroids (remove points $ coords $ fst furthest) (k-1)
     where
         pPoints = map Point points
         cent = centroid pPoints
         dists = map (dist cent) pPoints
         sorted = sortBy (compare `on` snd) $ zip pPoints dists
-        closest = head sorted
+        furthest = last sorted
 
 -- Function that sets K points as the centroids of the groups. This is the main grouping function.
 -- Parameters:
