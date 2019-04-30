@@ -13,27 +13,27 @@ import Data.Function
 
 -- Abstract type "Point"
 -- Fields:
---      coords: List of coordinates. Element i means the coordinate of the point on the i-th dimension
+--      coords: List of coordinates. Element i represents the coordinate of the point on the i-th dimension.
 data Point = Point {
     coords :: [Float]
 } deriving (Show)
 
--- Function to calculate the euclidean distance between two points
+-- Function that calculates the euclidean distance between two points.
 -- Parameters:
---      p1: First point
---      p2: Second point
+--      p1: Point -> First point
+--      p2: Point -> Second point
 -- Result:
---      Float: Euclidean distance between p1 and p2
+--      Float -> Euclidean distance between p1 and p2
 dist :: Point -> Point -> Float
 dist p1 p2 = sqrt sumOfSquares
     where
         sumOfSquares = sum $ zipWith (\x1 x2 -> (x1-x2)^2) (coords p1) (coords p2)
 
--- Function to find the centroid of a list of points
+-- Function to find the centroid of a list of points.
 -- Parameters:
---      points: List of points to find the centroid from
+--      points: [Point] -> List of points to find the centroid from
 -- Result:
---      Point: Point that is the centroid of the group
+--      Point-> Point that is the centroid of the group
 centroid :: [Point] -> Point
 centroid points = Point centroidCoords
     where
@@ -43,20 +43,20 @@ centroid points = Point centroidCoords
         colSum = map sum transposedPointList
         centroidCoords = map (/pointLength) colSum
 
--- Function that finds the sum of the squared euclidean distances (SSE)
+-- Function that finds the sum of the squared euclidean distances (SSE).
 -- Parameters: 
---      points: List of points to find the SSE from
---      centroid: Centroid from the group
+--      points: [Point] -> List of points to find the SSE from
+--      centroid: Point -> Centroid from the group
 -- Result:
---      Float: Calculated SSE
+--      Float -> Calculated SSE
 sse :: [Point] -> Point -> Float
 sse points centroid = foldl (\acc x -> acc + (dist x centroid)^2) 0 points
 
--- Function that finds the sum of the coordinates of a point
+-- Function that finds the sum of the coordinates of a point.
 -- Parameters:
---      point: Point to be analyzed
+--      point: Point -> Point to be analyzed
 -- Result:
---      Float: Sum of the coordinates of the point
+--      Float -> Sum of the coordinates of the point
 coordSum :: Point -> Float
 coordSum point = sum $ coords point
 
@@ -64,12 +64,14 @@ coordSum point = sum $ coords point
 -- Project specific stuff
 -------------------------------------------------------------------------------------------------------------------------------------------
 
--- Function that finds the first point of the dataset
+-- Function that finds the first point of the dataset.
+-- This is an auxiliary function, and should be called exclusively from inside getPoints.
 -- Parameters:
---      points: [[Int]], the dataset where each element on the list represents one point on the dataset
--- Output:
---      point: The point that should be the first one to be evaluated
--- The next function to be called should be getSecondPoint, passing the dataset and the output of this function as parameters
+--      points: [[Float]] -> The dataset, with each element on the list representing one point on the dataset
+-- Result:
+--      [Float] -> The coordinates of the point that should be the first one to be evaluated following the project specification
+-- The next function to be called should be getSecondPoint, with the dataset and the output of this function as parameters.
+getFirstPoint :: [[Float]] -> [Float]
 getFirstPoint points = fst $ head minPoint
     where
         cpoints = map Point points
@@ -80,12 +82,14 @@ getFirstPoint points = fst $ head minPoint
         minPoint = sortBy (compare `on` fst) pointsWithMinSum
 
 
--- Function that finds the second point of the dataset
+-- Function that finds the second point of the dataset.
+-- This is an auxiliary function, and should be called exclusively from inside getPoints.
 -- Parameters:
---      points: [[Int]], the dataset where each element on the list represents one point on the dataset
---      initial: [Int], the initial point of the dataset (calculated on getFirstPoint)
--- Output:
---      point: The second point of the Dataset
+--      points: [[Float]] -> The dataset, with each element on the list representing one point on the dataset
+--      initial: [Float] -> The initial point of the dataset (calculated previously on getFirstPoint)
+-- Result:
+--      [Float] -> The coordinates of the point that should be the second one to be evaluated following the project specification
+getSecondPoint :: [[Float]] -> [Float] -> [Float]
 getSecondPoint points initial = fst $ head maxDistPoint
     where
         cpoints = map Point points
@@ -96,12 +100,14 @@ getSecondPoint points initial = fst $ head maxDistPoint
         pointsWithMaxDist = [x | x <- sorted, (snd x) == maxDist]
         maxDistPoint = sortBy (compare `on` fst) pointsWithMaxDist
 
--- Function that sets K points as the centroids of the groups, but without considering the first and second points specifically. Called by getPoints
+-- Function that sets K points as the centroids of the groups, but without considering the first and second points specifically.
+-- This is an auxiliary function, and should be called exclusively from inside getPoints.
 -- Parameters:
---      points: [[Int]] points to be analyzed
---      k: Int, # of points to be picked
--- Output:
---      [Points]: Centroids from groups
+--      points: [[Float]] -> Points to be analyzed
+--      k: Num -> Number of centroids to be chosen
+-- Result:
+--      [[Float]] -> Centroids from groups
+getCentroids :: (Eq a, Num a) => [[Float]] -> a -> [[Float]]
 getCentroids points k
     | k == 0 = []
     | otherwise = (coords $ fst closest):getCentroids (remove points $ coords $ fst closest) (k-1)
@@ -112,12 +118,13 @@ getCentroids points k
         sorted = sortBy (compare `on` snd) $ zip pPoints dists
         closest = head sorted
 
--- Function that sets K points as the centroids of the groups. This is the main grouping function
+-- Function that sets K points as the centroids of the groups. This is the main grouping function.
 -- Parameters:
---     dataset: [[Int]] points to be analyzed
---     k: Int, # of points
--- Output:
---     [Points]: Centroids from all groups 
+--     dataset: [[Float]] -> Points to be analyzed
+--     k: Num -> Number of centroids to be chosen
+-- Result:
+--     [[Float]] -> List containing K centroids for K groups
+getPoints :: (Eq a, Num a) => [[Float]] -> a -> [[Float]]
 getPoints dataset k
     | k == 0 = []
     | otherwise = firstPoint:secondPoint:getCentroids filteredDataset (k-2)
