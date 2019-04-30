@@ -124,9 +124,12 @@ getCentroids points k
 --     k: Num -> Number of centroids to be chosen
 -- Result:
 --     [[Double]] -> List containing K centroids for K groups
-getPoints :: (Eq a, Num a) => [[Double]] -> a -> [[Double]]
+getPoints :: [[Double]] -> Int -> [[Double]]
 getPoints dataset k
+    | k > length (dataset) = []
     | k == 0 = []
+    | k == 1 = [firstPoint]
+    | k == 2 = firstPoint:[secondPoint]
     | otherwise = firstPoint:secondPoint:getCentroids filteredDataset (k-2)
     where
         firstPoint = getFirstPoint dataset
