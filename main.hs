@@ -44,10 +44,10 @@ getSecondPoint points initial = fst $ head maxDistPoint
         pointsWithMaxDist = [x | x <- sorted, (snd x) == maxDist]
         maxDistPoint = sortBy (compare `on` fst) pointsWithMaxDist
 
--- Function that sets K points as the centroids of the groups
+-- Function that sets K points as the centroids of the groups, but without considering the first and second points specifically. Called by getPoints
 -- Parameters:
---      points: [[Int]]
---      k: # of points
+--      points: [[Int]] points to be analyzed
+--      k: Int, # of points to be picked
 -- Output:
 --      [Points]: Centroids from groups
 getCentroids points k
@@ -60,6 +60,12 @@ getCentroids points k
         sorted = sortBy (compare `on` snd) $ zip pPoints dists
         closest = head sorted
 
+-- Function that sets K points as the centroids of the groups. This is the main grouping function
+-- Parameters:
+--     dataset: [[Int]] points to be analyzed
+--     k: Int, # of points
+-- Output:
+--     [Points]: Centroids from all groups 
 getPoints dataset k
     | k == 0 = []
     | otherwise = firstPoint:secondPoint:getCentroids filteredDataset (k-2)
