@@ -4,7 +4,8 @@ module Algebra.Point (
     centroid,
     sse,
     coordSum,
-    getPoints
+    getPoints,
+    findNearest
 ) where
 
 import Data.List
@@ -59,6 +60,23 @@ sse points centroid = foldl (\acc x -> acc + (dist x centroid)^2) 0 points
 --      Double -> Sum of the coordinates of the point
 coordSum :: Point -> Double
 coordSum point = sum $ coords point
+
+
+-- Finds the point in a group that is closest to another point
+-- Parameters:
+--     point: [Double] -> Point to be grouped
+--     group: [[Double]] -> List of points to be analyzed
+-- Result:
+--     [Double] -> Point in group with the smallest euclidean distance from the point
+findNearest :: [Double] -> [[Double]] -> [Double]
+findNearest point group = coords $ fst closest
+    where
+        cPoints = map Point group
+        dists = map (dist $ Point point) cPoints
+        zipped = zip cPoints dists
+        closest = head $ sortBy (compare `on` snd) zipped
+
+
 
 -------------------------------------------------------------------------------------------------------------------------------------------
 -- Project specific stuff
