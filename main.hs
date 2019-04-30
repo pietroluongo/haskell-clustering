@@ -18,6 +18,21 @@ getFirstPoint points = head minPoint
         minPoint = sortBy (compare `on` fst) pointsWithMinSum
 
 
+-- Function that finds the second point of the dataset
+-- Parameters:
+--      points: [[Int]], the dataset where each element on the list represents one point on the dataset
+--      initial: [Int], the initial point of the dataset (calculated on getFirstPoint)
+-- Output:
+--      point: The second point of the Dataset
+getSecondPoint points initial = maxDistPoint
+    where
+        cpoints = map Point points
+        cpoint = Point initial
+        zipped = zip (points) (map (dist cpoint) cpoints)
+        sorted = drop 1 $ sortBy (compare `on` snd) zipped
+        maxDist = snd $ last sorted
+        pointsWithMaxDist = [x | x <- sorted, (snd x) == maxDist]
+        maxDistPoint = sortBy (compare `on` fst) pointsWithMaxDist 
 -- read k.txt
 -- read entrada.txt
 -- do grouping algorithm
