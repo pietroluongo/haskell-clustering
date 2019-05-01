@@ -51,6 +51,8 @@ The lack of a debugger in Haskell is something i definitely don't like. Also, th
 
 About commits: i prefer to micromanage commits and sometimes it may feel a bit obnoxious to have various commits with small changes. It's an habit i picked up after losing a lot of data, more than once. It wasn't very nice.
 
+I do realize that some of the decisions i took on this project might seem like overkill (like defining a data type Point, when it could be represented as a list of numbers). This was a deliberate decision, simply because i wanted to learn as much as i could from the language, and apply as many different resources as possible to make the project expandable.
+
 Task list
 -------------
 + [x] Write README.md :D
