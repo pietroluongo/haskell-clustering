@@ -17,7 +17,7 @@ import Data.Function
 --      coords: [Double] -> List of coordinates. Element i represents the coordinate of the point on the i-th dimension.
 data Point = Point {
     coords :: [Double]
-} deriving (Show)
+} deriving (Show, Eq, Ord)
 
 -- Function that calculates the euclidean distance between two points.
 -- Parameters:
@@ -84,64 +84,59 @@ findNearest point group = fst closest
 -- Function that finds the first point of the dataset.
 -- This is an auxiliary function, and should be called exclusively from inside getPoints.
 -- Parameters:
---      points: [[Double]] -> The dataset, with each element on the list representing one point on the dataset
+--      points: [Points] -> The dataset, with each element on the list representing one point on the dataset
 -- Result:
---      [Double] -> The coordinates of the point that should be the first one to be evaluated following the project specification
+--      Point -> The coordinates of the point that should be the first one to be evaluated following the project specification
 -- The next function to be called should be getSecondPoint, with the dataset and the output of this function as parameters.
-getFirstPoint :: [[Double]] -> [Double]
-getFirstPoint points = fst $ head minPoint
+getFirstPoint :: [Point] -> Point
+getFirstPoint points = minPoint
     where
-        cpoints = map Point points
-        zipped = zip (points) (map (coordSum) cpoints)
+        zipped = zip (points) (map (coordSum) points)
         sorted = sortBy (compare `on` snd) zipped
         minSum = snd $ head sorted
         pointsWithMinSum = [x | x <- sorted, (snd x) == minSum]
-        minPoint = sortBy (compare `on` fst) pointsWithMinSum
-
+        minPoint = fst $ head $ sortBy (compare `on` fst) pointsWithMinSum
 
 -- Function that finds the second point of the dataset.
 -- This is an auxiliary function, and should be called exclusively from inside getPoints.
 -- Parameters:
---      points: [[Double]] -> The dataset, with each element on the list representing one point on the dataset
---      initial: [Double] -> The initial point of the dataset (calculated previously on getFirstPoint)
+--      points: [Point] -> The dataset, with each element on the list representing one point on the dataset
+--      initial: Point -> The initial point of the dataset (calculated previously on getFirstPoint)
 -- Result:
---      [Double] -> The coordinates of the point that should be the second one to be evaluated following the project specification
-getSecondPoint :: [[Double]] -> [Double] -> [Double]
-getSecondPoint points initial = fst $ head maxDistPoint
+--      [Point] -> The coordinates of the point that should be the second one to be evaluated following the project specification
+getSecondPoint :: [Point] -> Point -> Point
+getSecondPoint points initial = maxDistPoint
     where
-        cpoints = map Point points
-        cpoint = Point initial
-        zipped = zip (points) (map (dist cpoint) cpoints)
+        zipped = zip (points) (map (dist initial) points)
         sorted = drop 1 $ sortBy (compare `on` snd) zipped
         maxDist = snd $ last sorted
         pointsWithMaxDist = [x | x <- sorted, (snd x) == maxDist]
-        maxDistPoint = sortBy (compare `on` fst) pointsWithMaxDist
+        maxDistPoint = fst $ head $ sortBy (compare `on` fst) pointsWithMaxDist
 
 -- Function that sets K points as the centroids of the groups, but without considering the first and second points specifically.
 -- This is an auxiliary function, and should be called exclusively from inside getPoints.
 -- Parameters:
---      points: [[Double]] -> Points to be analyzed
+--      points: [Point] -> Points to be analyzed
 --      k: Num -> Number of centroids to be chosen
 -- Result:
---      [[Double]] -> Centroids from groups
-getCentroids :: (Eq a, Num a) => [[Double]] -> a -> [[Double]]
+--      [Point] -> Centroids from groups
+getCentroids :: (Eq a, Num a) => [Point] -> a -> [Point]
 getCentroids points k
     | k == 0 = []
-    | otherwise = (coords $ fst furthest):getCentroids (remove points $ coords $ fst furthest) (k-1)
+    | otherwise = furthest:getCentroids (remove points furthest) (k-1)
     where
-        pPoints = map Point points
-        cent = centroid pPoints
-        dists = map (dist cent) pPoints
-        sorted = sortBy (compare `on` snd) $ zip pPoints dists
-        furthest = last sorted
+        cent = centroid points
+        dists = map (dist cent) points
+        sorted = sortBy (compare `on` snd) $ zip points dists
+        furthest = fst $ last sorted
 
 -- Function that sets K points as the centroids of the groups. This is the main grouping function.
 -- Parameters:
 --     dataset: [[Double]] -> Points to be analyzed
 --     k: Num -> Number of centroids to be chosen
 -- Result:
---     [[Double]] -> List containing K centroids for K groups
-getPoints :: [[Double]] -> Int -> [[Double]]
+--     [Point] -> List containing K centroids for K groups
+getPoints :: [[Double]] -> Int -> [Point]
 getPoints dataset k
     | k > length (nub dataset) = []
     | k == 0 = []
@@ -149,8 +144,8 @@ getPoints dataset k
     | k == 2 = firstPoint:[secondPoint]
     | otherwise = firstPoint:secondPoint:getCentroids filteredDataset (k-2)
     where
-        firstPoint = getFirstPoint dataset
-        secondPoint = getSecondPoint dataset firstPoint
-        filteredDataset' = remove dataset firstPoint
+        _dataset = map Point dataset
+        firstPoint = getFirstPoint _dataset
+        secondPoint = getSecondPoint _dataset firstPoint
+        filteredDataset' = remove _dataset firstPoint
         filteredDataset = remove filteredDataset' secondPoint
-
