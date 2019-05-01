@@ -64,16 +64,15 @@ coordSum point = sum $ coords point
 
 -- Finds the point in a group that is closest to another point
 -- Parameters:
---     point: [Double] -> Point to be grouped
---     group: [[Double]] -> List of points to be analyzed
+--     point: Point -> Point to be grouped
+--     group: [Point] -> List of points to be analyzed
 -- Result:
---     [Double] -> Point in group with the smallest euclidean distance from the point
-findNearest :: [Double] -> [[Double]] -> [Double]
-findNearest point group = coords $ fst closest
+--     Point -> Point in group with the smallest euclidean distance from the input point
+findNearest :: Point -> [Point] -> Point
+findNearest point group = fst closest
     where
-        cPoints = map Point group
-        dists = map (dist $ Point point) cPoints
-        zipped = zip cPoints dists
+        dists = map (dist point) group
+        zipped = zip group dists
         closest = head $ sortBy (compare `on` snd) zipped
 
 
