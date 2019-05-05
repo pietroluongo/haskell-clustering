@@ -53,10 +53,12 @@ About commits: i prefer to micromanage commits and sometimes it may feel a bit o
 
 I do realize that some of the decisions i took on this project might seem like overkill (like defining a data type Point, when it could be represented as a list of numbers). This was a deliberate decision, simply because i wanted to learn as much as i could from the language, and apply as many different resources as possible to make the project expandable.
 
+Messing with OOP concepts in functional languages is kind of a huge headache. It gives you the tools to do it, but they often feel incomplete and really like an afterthought instead of something that is, in fact, practical to use. Perhaps i'm overthinking it, but i feel like i'm writing more code to make the same procedures i'd make in very few lines on other languages. I believe it's just because i'm not used to it yet, and everything will just "click" eventually. What worries me is the lack of time to finish this project and deal with other projects at the university. I'm kind of mentally exhausted to be honest. 
+
 Task list
 -------------
 + [x] Write README.md :D
 + [x] Implement Point data type
 + [x] Implement the grouping algorithm
     + [ ] Test the grouping algorithm properly	
-+ [ ] Figure out IO in Haskell
++ [x] Figure out IO in Haskell (kinda)
