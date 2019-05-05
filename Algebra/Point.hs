@@ -5,7 +5,8 @@ module Algebra.Point (
     sse,
     coordSum,
     findCentroidsFromDataset,
-    findNearest
+    findNearest,
+    filterDataset
 ) where
 
 import Data.List
@@ -64,17 +65,20 @@ coordSum point = sum $ coords point
 
 -- Finds the point in a group that is closest to another point
 -- Parameters:
---     point: Point -> Point to be grouped
 --     group: [Point] -> List of points to be analyzed
+--     point: Point -> Point to be grouped
 -- Result:
 --     Point -> Point in group with the smallest euclidean distance from the input point
-findNearest :: Point -> [Point] -> Point
-findNearest point group = fst closest
+findNearest :: [Point] -> Point -> Point
+findNearest group point = fst closest
     where
         dists = map (dist point) group
         zipped = zip group dists
         closest = head $ sortBy (compare `on` snd) zipped
 
+
+filterDataset :: [Point] -> [Point] -> [Point]
+filterDataset pointsToBeRemoved allPoints = [x | x <- allPoints, not $ x `elem` pointsToBeRemoved]
 
 
 -------------------------------------------------------------------------------------------------------------------------------------------
