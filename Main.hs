@@ -17,6 +17,8 @@ __output_file_res = "./output/result.txt"
 
 __CONST_MAX_IT = 100
 
+__test = "7 5.4 6.32 9\n17 32.3 5 9.99\n33 54 5.6 65.8\n77.7 33.4 98 7.56\n8.9 5.8 6 9"
+
 ----------------------------------------------------------
 
 -- read k.txt
@@ -28,8 +30,10 @@ __CONST_MAX_IT = 100
 main = do   putStrLn "Main called"
             readK <- readFile __input_file_k
             readP <- readFile __input_file_points
-            let dataset = map (read :: Double) (lines readP)
-            let d = findCentroidsFromDataset dataset (read readK :: Int)
+            let dataset = map (map (read::String->Double)) (map (words) (lines readP))
+            let k = read readK :: Int
+            let d = findCentroidsFromDataset dataset k
+            putStrLn $ show d
             writeFile __output_file_res "nil"
             writeFile __output_file_groups "nil"
             return()
