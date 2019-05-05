@@ -4,7 +4,7 @@ module Algebra.Point (
     centroid,
     sse,
     coordSum,
-    getPoints,
+    findCentroidsFromDataset,
     findNearest
 ) where
 
