@@ -8,6 +8,8 @@ import System.IO
 
 __dataset = [[3.0, 2.0, 1.0], [1.0, 2.0, 3.0], [4.0, 5.0, 6.0], [7.0, 8.0, 9.0], [9.0, 8.0, 7.0]]
 
+__dataset_conv = map (Point) __dataset
+
 --__dataset_fst_point = getFirstPoint __dataset
 
 __input_file_k = "./testcases/k.txt"
@@ -27,6 +29,19 @@ __test = "7 5.4 6.32 9\n17 32.3 5 9.99\n33 54 5.6 65.8\n77.7 33.4 98 7.56\n8.9 5
 -- write sse value to result.txt
 -- write output to saida.txt
 
+__dbg = groupStuff p c
+    where
+        c = findCentroidsFromDataset __dataset 3
+        p = filterDataset c __dataset_conv
+
+
+groupStuff points centroids = 
+    c
+    where
+        a = map (makeEmptyGroup) centroids
+        b = map (findNearest centroids) points
+        c = zip points b
+
 main = do   putStrLn "Main called"
             readK <- readFile __input_file_k
             readP <- readFile __input_file_points
@@ -34,6 +49,6 @@ main = do   putStrLn "Main called"
             let k = read readK :: Int
             let d = findCentroidsFromDataset dataset k
             putStrLn $ show d
-            writeFile __output_file_res "nil"
+            writeFile __output_file_res $ "nil"
             writeFile __output_file_groups "nil"
             return()
