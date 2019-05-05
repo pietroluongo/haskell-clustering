@@ -136,8 +136,8 @@ getCentroids points k
 --     k: Num -> Number of centroids to be chosen
 -- Result:
 --     [Point] -> List containing K centroids for K groups
-getPoints :: [[Double]] -> Int -> [Point]
-getPoints dataset k
+findCentroidsFromDataset :: [[Double]] -> Int -> [Point]
+findCentroidsFromDataset dataset k
     | k > length (nub dataset) = []
     | k == 0 = []
     | k == 1 = [firstPoint]
