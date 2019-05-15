@@ -8,7 +8,7 @@ import System.IO
 
 __dataset = [[3.0, 2.0, 1.0], [1.0, 2.0, 3.0], [4.0, 5.0, 6.0], [7.0, 8.0, 9.0], [9.0, 8.0, 7.0]]
 
-__dataset_conv = map (Point) __dataset
+__dataset_conv = [Point (fst y) (snd y) | y <- (zip __dataset [1..])]
 
 --__dataset_fst_point = getFirstPoint __dataset
 
@@ -29,7 +29,7 @@ __test = "7 5.4 6.32 9\n17 32.3 5 9.99\n33 54 5.6 65.8\n77.7 33.4 98 7.56\n8.9 5
 -- write sse value to result.txt
 -- write output to saida.txt
 
-{-
+
 __dbg = groupStuff p c
     where
         c = findCentroidsFromDataset __dataset 3
@@ -37,12 +37,13 @@ __dbg = groupStuff p c
 
 
 groupStuff points centroids = 
-    c
+    d
     where
         a = map (makeEmptyGroup) centroids
         b = map (findNearest centroids) points
         c = zip points b
--}
+        d = groupPoints c a
+
 
 main = do   putStrLn "Main called"
             readK <- readFile __input_file_k
