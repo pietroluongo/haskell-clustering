@@ -17,7 +17,8 @@ import Data.Function
 -- Fields:
 --      coords: [Double] -> List of coordinates. Element i represents the coordinate of the point on the i-th dimension.
 data Point = Point {
-    coords :: [Double]
+    coords :: [Double],
+    id     :: Int
 } deriving (Show, Eq, Ord)
 
 -- Function that calculates the euclidean distance between two points.
@@ -37,7 +38,7 @@ dist p1 p2 = sqrt sumOfSquares
 -- Result:
 --      Point-> Point that is the centroid of the group
 centroid :: [Point] -> Point
-centroid points = Point centroidCoords
+centroid points = Point centroidCoords (-1)
     where
         pointLength = fromIntegral (length(points))
         pointList = map coords points
@@ -148,7 +149,8 @@ findCentroidsFromDataset dataset k
     | k == 2 = firstPoint:[secondPoint]
     | otherwise = firstPoint:secondPoint:getCentroids filteredDataset (k-2)
     where
-        _dataset = map Point dataset
+        z = zip dataset ([1..])
+        _dataset = [Point (fst y) (snd y) | y <- z]
         firstPoint = getFirstPoint _dataset
         secondPoint = getSecondPoint _dataset firstPoint
         filteredDataset' = remove _dataset firstPoint

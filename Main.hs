@@ -29,6 +29,7 @@ __test = "7 5.4 6.32 9\n17 32.3 5 9.99\n33 54 5.6 65.8\n77.7 33.4 98 7.56\n8.9 5
 -- write sse value to result.txt
 -- write output to saida.txt
 
+{-
 __dbg = groupStuff p c
     where
         c = findCentroidsFromDataset __dataset 3
@@ -41,6 +42,7 @@ groupStuff points centroids =
         a = map (makeEmptyGroup) centroids
         b = map (findNearest centroids) points
         c = zip points b
+-}
 
 main = do   putStrLn "Main called"
             readK <- readFile __input_file_k
