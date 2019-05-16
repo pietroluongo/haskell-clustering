@@ -26,19 +26,14 @@ findGroupByCentroid :: [Group] -> AP.Point -> Group
 findGroupByCentroid groups c = head [x | x <- groups, centroid x == c]
 
 --updateGroup :: AP.Point -> [Group] -> AP.Point -> Group
-updateGroup info = Group cent []
+updateGroup info = c--Group cent []
     where
-        --group = findGroupByCentroid g c
-        cent = snd $ head $ head $ info
-        --poi = points group
+        a = head $ tail info
+        b = Group (snd $ head a) [fst x | x <- a]
+        c = map (\q -> Group (snd $ head q) [fst x | x <- q]) info
 
 --groupPoints :: [(AP.Point, AP.Point)] -> [Group] -> [Group]
 groupPoints points groups = z
     where
         x = groupBy ((==) `on` snd) points
         z =  updateGroup x
-        --z = map ([[(tupla)]])
-        --a = map (\(ponto, centroide) -> updateGroup centroide groups ponto) points
-        --c = map (findGroupByCentroid groups) [snd x | x <- points]
-        --d = zip c ([map fst points])
-        --e = map (\(grupo, pontos) -> addToGroup pontos grupo) d
