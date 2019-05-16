@@ -72,12 +72,14 @@ coordSum point = sum $ coords point
 -- Result:
 --     Point -> Point in group with the smallest euclidean distance from the input point
 findNearest :: [Point] -> Point -> Point
-findNearest group point = fst closest
+findNearest group point = minPoint
     where
         dists = map (dist point) group
         zipped = zip group dists
-        closest = head $ sortBy (compare `on` snd) zipped
-
+        sorted = sortBy (compare `on` snd) zipped
+        minDist = snd $ head sorted
+        smol = [x | x <- sorted, (snd x) == minDist]
+        minPoint = fst $ head $ sortBy (compare `on` fst) smol
 
 filterDataset :: [Point] -> [Point] -> [Point]
 filterDataset pointsToBeRemoved allPoints = [x | x <- allPoints, not $ x `elem` pointsToBeRemoved]
