@@ -30,10 +30,10 @@ __test = "7 5.4 6.32 9\n17 32.3 5 9.99\n33 54 5.6 65.8\n77.7 33.4 98 7.56\n8.9 5
 -- write output to saida.txt
 
 
-__dbg = groupStuff p c
+_dbg = groupStuff __dataset_conv c
     where
         c = findCentroidsFromDataset __dataset 3
-        p = filterDataset c __dataset_conv
+        -- p = filterDataset c __dataset_conv
 
 
 groupStuff points centroids = 
