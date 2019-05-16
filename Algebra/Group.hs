@@ -35,5 +35,5 @@ updateGroups info = c
 groupPoints :: [(AP.Point, AP.Point)] -> [Group]
 groupPoints points = z
     where
-        x = groupBy ((==) `on` snd) points
+        x = groupBy ((==) `on` snd) (sortBy (compare `on` snd) points)
         z =  updateGroups x
