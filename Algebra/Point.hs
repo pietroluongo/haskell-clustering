@@ -1,12 +1,13 @@
 module Algebra.Point (
     Point(..),
     dist,
-    centroid,
+    findCentroid,
     sse,
     coordSum,
     findCentroidsFromDataset,
     findNearest,
-    filterDataset
+    filterDataset,
+    convertDataset
 ) where
 
 import Data.List
@@ -37,8 +38,8 @@ dist p1 p2 = sqrt sumOfSquares
 --      points: [Point] -> List of points to find the centroid from
 -- Result:
 --      Point-> Point that is the centroid of the group
-centroid :: [Point] -> Point
-centroid points = Point centroidCoords (-1)
+findCentroid :: [Point] -> Point
+findCentroid points = Point centroidCoords (-1)
     where
         pointLength = fromIntegral (length(points))
         pointList = map coords points
@@ -81,6 +82,8 @@ findNearest group point = fst closest
 filterDataset :: [Point] -> [Point] -> [Point]
 filterDataset pointsToBeRemoved allPoints = [x | x <- allPoints, not $ x `elem` pointsToBeRemoved]
 
+convertDataset :: [[Double]] -> [Point]
+convertDataset dataset = [Point (fst y) (snd y) | y <- (zip dataset [1..])]
 
 -------------------------------------------------------------------------------------------------------------------------------------------
 -- Project specific stuff
@@ -130,7 +133,7 @@ getCentroids points k
     | k == 0 = []
     | otherwise = furthest:getCentroids (remove points furthest) (k-1)
     where
-        cent = centroid points
+        cent = findCentroid points
         dists = map (dist cent) points
         sorted = sortBy (compare `on` snd) $ zip points dists
         furthest = fst $ last sorted

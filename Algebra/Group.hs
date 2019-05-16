@@ -26,7 +26,7 @@ findGroupByCentroid :: [Group] -> AP.Point -> Group
 findGroupByCentroid groups c = head [x | x <- groups, centroid x == c]
 
 updateGroups :: [[(AP.Point, AP.Point)]] -> [Group]
-updateGroups info = c--Group cent []
+updateGroups info = c
     where
         a = head $ tail info
         b = Group (snd $ head a) [fst x | x <- a]
