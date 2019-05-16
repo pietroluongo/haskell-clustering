@@ -18,8 +18,8 @@ import Data.Function
 -- Fields:
 --      coords: [Double] -> List of coordinates. Element i represents the coordinate of the point on the i-th dimension.
 data Point = Point {
-    coords :: [Double],
-    id     :: Int
+    coords     :: [Double],
+    identifier :: Int
 } deriving (Show, Eq, Ord)
 
 -- Function that calculates the euclidean distance between two points.

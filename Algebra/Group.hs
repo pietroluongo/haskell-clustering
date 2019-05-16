@@ -4,7 +4,8 @@ module Algebra.Group (
     makeEmptyGroup,
     findGroupByCentroid,
     groupPoints,
-    updateGroups
+    updateGroups,
+    getTotalSSE
 ) where
 
 import qualified Algebra.Point as AP
@@ -37,3 +38,9 @@ groupPoints points = z
     where
         x = groupBy ((==) `on` snd) (sortBy (compare `on` snd) points)
         z =  updateGroups x
+
+getTotalSSE :: [Group] -> Double
+getTotalSSE groups = total
+    where
+        a = map (\group -> AP.sse (points group) (centroid group)) groups
+        total = sum a
