@@ -4,7 +4,7 @@ module Algebra.Group (
     makeEmptyGroup,
     findGroupByCentroid,
     groupPoints,
-    updateGroup
+    updateGroups
 ) where
 
 import qualified Algebra.Point as AP
@@ -25,15 +25,15 @@ makeEmptyGroup point = Group point []
 findGroupByCentroid :: [Group] -> AP.Point -> Group
 findGroupByCentroid groups c = head [x | x <- groups, centroid x == c]
 
---updateGroup :: AP.Point -> [Group] -> AP.Point -> Group
-updateGroup info = c--Group cent []
+updateGroups :: [[(AP.Point, AP.Point)]] -> [Group]
+updateGroups info = c--Group cent []
     where
         a = head $ tail info
         b = Group (snd $ head a) [fst x | x <- a]
         c = map (\q -> Group (snd $ head q) [fst x | x <- q]) info
 
---groupPoints :: [(AP.Point, AP.Point)] -> [Group] -> [Group]
-groupPoints points groups = z
+groupPoints :: [(AP.Point, AP.Point)] -> [Group]
+groupPoints points = z
     where
         x = groupBy ((==) `on` snd) points
-        z =  updateGroup x
+        z =  updateGroups x

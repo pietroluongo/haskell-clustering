@@ -36,14 +36,12 @@ _dbg = groupStuff __dataset_conv c
         -- p = filterDataset c __dataset_conv
 
 
-groupStuff points centroids = 
-    d
+groupStuff points centroids = groups
     where
-        a = map (makeEmptyGroup) centroids
-        b = map (findNearest centroids) points
-        c = zip points b
-        d = groupPoints c a
+        zipped = zip points (map (findNearest centroids) points)
+        groups = groupPoints zipped
 
+group_iter = 0
 
 main = do   putStrLn "Main called"
             readK <- readFile __input_file_k
