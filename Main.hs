@@ -8,9 +8,7 @@ import System.IO
 
 __dataset = [[3.0, 2.0, 1.0], [1.0, 2.0, 3.0], [4.0, 5.0, 6.0], [7.0, 8.0, 9.0], [9.0, 8.0, 7.0]]
 
-__dataset_conv = [Point (fst y) (snd y) | y <- (zip __dataset [1..])]
-
---__dataset_fst_point = getFirstPoint __dataset
+__dataset_conv = convertDataset __dataset
 
 __input_file_k = "./testcases/k.txt"
 __input_file_points = "./testcases/entrada.txt"
@@ -30,10 +28,11 @@ __test = "7 5.4 6.32 9\n17 32.3 5 9.99\n33 54 5.6 65.8\n77.7 33.4 98 7.56\n8.9 5
 -- write output to saida.txt
 
 
-_dbg = groupStuff __dataset_conv c
+_dbg = d
     where
+        a = groupStuff __dataset_conv c
         c = findCentroidsFromDataset __dataset 3
-        -- p = filterDataset c __dataset_conv
+        d = group_iter a 0
 
 
 groupStuff points centroids = groups
@@ -41,15 +40,30 @@ groupStuff points centroids = groups
         zipped = zip points (map (findNearest centroids) points)
         groups = groupPoints zipped
 
-group_iter = 0
+group_iter groups cur_iter
+    | cur_iter == __CONST_MAX_IT = groups
+    | not hasChanged = groups
+    | otherwise = group_iter newGroups (cur_iter+1)
+    where
+        pontos = concat $ map (points) groups
+        updatedCentroids = recalculateCentroids groups
+        d = (map (findNearest updatedCentroids) pontos)
+        zipped = zip pontos updatedCentroids
+        newGroups = groupPoints zipped
+        hasChanged = groups /= newGroups
+
+recalculateCentroids groups = b
+    where
+        b = map findCentroid (map (points) groups)
 
 main = do   putStrLn "Main called"
             readK <- readFile __input_file_k
             readP <- readFile __input_file_points
             let dataset = map (map (read::String->Double)) (map (words) (lines readP))
             let k = read readK :: Int
-            let d = findCentroidsFromDataset dataset k
-            putStrLn $ show d
+            let centroids = findCentroidsFromDataset dataset k
+            let conv = convertDataset dataset
+            let groupedStuff = groupStuff conv centroids
             writeFile __output_file_res $ "nil"
-            writeFile __output_file_groups "nil"
+            writeFile __output_file_groups (show groupedStuff)
             return()
