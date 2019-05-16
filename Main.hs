@@ -69,14 +69,14 @@ recalculateCentroids groups = b
     where
         b = map findCentroid (map (points) groups)
 
-getOutStrings groups = fsdf
+getOutStrings groups = dsdf
     where
         asdf = map (map (identifier)) (map (points) groups)
         bsdf = map (map show) asdf
-        csdf = intersperse "\n\n" $ map (unwords) bsdf
+        csdf = intersperse "\n \n" $ map (unwords) bsdf
         dsdf = concatenate $ csdf
-        esdf = intersperse "," $ words dsdf
-        fsdf = concatenate esdf
+        --esdf = intersperse "," $ words dsdf
+        --fsdf = concatenate esdf
 
 concatenate (x:xs) = x++concat xs
 
