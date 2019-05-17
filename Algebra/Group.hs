@@ -5,12 +5,16 @@ module Algebra.Group (
     findGroupByCentroid,
     groupPoints,
     updateGroups,
-    getTotalSSE
+    getTotalSSE,
+    groupPointsIter,
+    groupPointsFirstIter
 ) where
 
 import qualified Algebra.Point as AP
 import Data.List
 import Data.Function
+
+__CONST_MAX_IT = 100
 
 data Group = Group {
     centroid :: AP.Point,
@@ -37,10 +41,30 @@ groupPoints :: [(AP.Point, AP.Point)] -> [Group]
 groupPoints points = z
     where
         x = groupBy ((==) `on` snd) (sortBy (compare `on` snd) points)
-        z =  updateGroups x
+        z = updateGroups x
 
 getTotalSSE :: [Group] -> Double
 getTotalSSE groups = total
     where
         a = map (\group -> AP.sse (points group) (centroid group)) groups
         total = sum a
+
+groupPointsIter :: [Group] -> Int -> [Group]
+groupPointsIter groups cur_iter
+    | cur_iter == __CONST_MAX_IT = groups
+    | not hasChanged = groups
+    | otherwise = groupPointsIter newGroups (cur_iter+1)
+    where
+        pontos = concat $ map (points) groups
+        updatedCentroids = map AP.findCentroid (map (points) groups)
+        nearestCentroids = (map (AP.findNearest updatedCentroids) pontos)
+        zipped = zip pontos nearestCentroids
+        newGroups = groupPoints zipped
+        hasChanged = groups /= newGroups
+
+
+groupPointsFirstIter :: [AP.Point] -> [AP.Point] -> [Group]
+groupPointsFirstIter points centroids = groups
+    where
+        zipped = zip points (map (AP.findNearest centroids) points)
+        groups = groupPoints zipped
