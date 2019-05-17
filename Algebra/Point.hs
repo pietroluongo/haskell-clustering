@@ -130,12 +130,13 @@ getSecondPoint points initial = maxDistPoint
 --      k: Num -> Number of centroids to be chosen
 -- Result:
 --      [Point] -> Centroids from groups
-getCentroids :: (Eq a, Num a) => [Point] -> a -> [Point]
-getCentroids points k
+-- FIXME
+getCentroids :: (Eq a, Num a) => [Point] -> a -> [Point] -> [Point]
+getCentroids points k selected
     | k == 0 = []
-    | otherwise = furthest:getCentroids (remove points furthest) (k-1)
+    | otherwise = furthest:getCentroids (remove points furthest) (k-1) (furthest:selected)
     where
-        cent = findCentroid points
+        cent = findCentroid selected
         dists = map (dist cent) points
         sorted = sortBy (compare `on` snd) $ zip points dists
         furthest = fst $ last sorted
@@ -152,7 +153,7 @@ findCentroidsFromDataset dataset k
     | k == 0 = []
     | k == 1 = [firstPoint]
     | k == 2 = firstPoint:[secondPoint]
-    | otherwise = firstPoint:secondPoint:getCentroids filteredDataset (k-2)
+    | otherwise = firstPoint:secondPoint:getCentroids filteredDataset (k-2) (firstPoint:[secondPoint])
     where
         z = zip dataset ([1..])
         _dataset = [Point (fst y) (snd y) | y <- z]
