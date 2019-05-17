@@ -128,9 +128,9 @@ getSecondPoint points initial = maxDistPoint
 -- Parameters:
 --      points: [Point] -> Points to be analyzed
 --      k: Num -> Number of centroids to be chosen
+--      selected: [Point] -> Points chosen previously
 -- Result:
 --      [Point] -> Centroids from groups
--- FIXME
 getCentroids :: (Eq a, Num a) => [Point] -> a -> [Point] -> [Point]
 getCentroids points k selected
     | k == 0 = []
