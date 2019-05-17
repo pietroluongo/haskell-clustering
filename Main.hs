@@ -30,24 +30,27 @@ __q = Group __centb [__centb, __centa, __b]
 
 __s = [__u, __q]
 
+___c1 = Point[4.5,2.3,1.3,0.3] 0
+
+___c2 = Point[7.7,2.6,6.9,2.3] 0
+
+___c3 = Point[7.7,3.8,6.7,2.2] 0
+
+___p51 = Point[7.0, 3.2, 4.7, 1.4] 0
+
+___p52 = Point[6.4, 3.2, 4.5, 1.5] 0
+
 ----------------------------------------------------------
 
-
-_dbg = b
+_dbg = centroids
     where
-        b = map (map (identifier)) (map (points) __s)
-        --d = intersperse 0 b
-        --a = findCentroidsFromDataset __test 3
-        --b = groupStuff' __test_conv a
-        --c = group_iter b 0
-        --d = getTotalSSE c
-{-
-groupStuff' points centroids = groups
-    where
-    zipped = zip points (map (findNearest' centroids) points)
-    groups = groupPoints zipped
--}
+        k = 3
+        centroids = findCentroidsFromDataset __test k
+        --conv = convertDataset __test
+        --groupedStuff = groupStuff conv centroids
+        --ree = group_iter groupedStuff 99
 
+-- NEEDS REFACTORING!
 groupStuff points centroids = groups
     where
         zipped = zip points (map (findNearest centroids) points)
@@ -69,14 +72,14 @@ recalculateCentroids groups = b
     where
         b = map findCentroid (map (points) groups)
 
-getOutStrings groups = dsdf
+-- FIXME
+getOutStrings groups = bsdf
     where
         asdf = map (map (identifier)) (map (points) groups)
-        bsdf = map (map show) asdf
-        csdf = intersperse "\n \n" $ map (unwords) bsdf
-        dsdf = concatenate $ csdf
-        --esdf = intersperse "," $ words dsdf
-        --fsdf = concatenate esdf
+        bsdf = concat . map (\x -> (concat . intersperse ", " $ (map (show) x)) ++ "\n\n") $ asdf
+        --bsdf = map (map show) asdf
+        --csdf = intersperse "\n\n" $ map (unwords) bsdf
+        --dsdf = concatenate $ csdf
 
 concatenate (x:xs) = x++concat xs
 
@@ -92,6 +95,7 @@ main = do   putStrLn "Main called"
             let roo = getOutStrings $ ree
             let sse = getTotalSSE ree
             writeFile __output_file_res $ printf "%.4f" sse
-            putStrLn $ roo
-            writeFile __output_file_groups (roo)
+            --putStrLn $ roo
+            writeFile __output_file_groups roo
+            --writeFile __output_file_groups (roo)
             return()
