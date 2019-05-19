@@ -30,15 +30,30 @@ Coding Standard
 
 **Function Names: `camelCase`**
 
+Building Instructions
+-------------
+
+There is a Makefile included with the project that will build the project properly. Build possibilities:
+
+
+- `all`: Standard build procedure, builds all files with optimizations.
+- `all-no-optimizations`: Builds the code without optimizations enabled.
+- `clean`: Removes compiled binaries and intermediate code.
+
 
 Folder Structure
 -------------
-+ Algebra
-	+ Point: "Point" data type definition and related functions.
-+ Main: Main project file
-+ testcases: Folder with test cases for the project
-+ Utils: Some assorted utility functions
 
+```
+.
+├── Algebra
+│   ├── Group.hs
+│   └── Point.hs
+├── Main.hs
+├── Makefile
+├── README.md
+└── specification.pdf
+```
 
 Some thoughts on the project
 -------------
@@ -55,10 +70,4 @@ I do realize that some of the decisions i took on this project might seem like o
 
 Messing with OOP concepts in functional languages is kind of a huge headache. It gives you the tools to do it, but they often feel incomplete and really like an afterthought instead of something that is, in fact, practical to use. Perhaps i'm overthinking it, but i feel like i'm writing more code to make the same procedures i'd make in very few lines on other languages. I believe it's just because i'm not used to it yet, and everything will just "click" eventually. What worries me is the lack of time to finish this project and deal with other projects at the university. I'm kind of mentally exhausted to be honest. 
 
-Task list
--------------
-+ [x] Write README.md :D
-+ [x] Implement Point data type
-+ [x] Implement the grouping algorithm
-    + [ ] Test the grouping algorithm properly	
-+ [x] Figure out IO in Haskell (kinda)
+Well, finally finished this up. Final conclusions are that I/O in Haskell kind of sucks. Formatting the output file was a massive nightmare, but i pushed through thanks to [@chamatt](https://github.com/chamatt) (thanks, dude!). It wound up being easier than i thought initally, but i kind of got stuck on the grouping algorithm for a considerable time. But i guess everything works itself out eventually, if you keep trying. Well, i guess that's about it!
