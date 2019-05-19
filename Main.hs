@@ -1,6 +1,5 @@
 import Algebra.Point
 import Data.List
-import Data.Function
 import Algebra.Group
 import System.IO
 import Text.Printf
@@ -11,7 +10,11 @@ __input_file_points = "./testcases/entrada.txt"
 __output_file_groups = "./output/saida.txt"
 __output_file_res = "./output/result.txt"
 
-
+-- Function that formats output for proper display
+-- Parameters:
+--     groups: [Group] -> List of groups to be displayed
+-- Result:
+--     [Char] -> String to be outputted 
 formatOuput :: [Group] -> [Char]
 formatOuput groups = formatted
     where

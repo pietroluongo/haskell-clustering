@@ -13,6 +13,7 @@ module Algebra.Point (
 import Data.List
 import Data.Function
 
+
 -- Abstract type "Point"
 -- Fields:
 --      coords: [Double] -> List of coordinates. Element i represents the coordinate of the point on the i-th dimension.
@@ -20,6 +21,7 @@ data Point = Point {
     coords     :: [Double],
     identifier :: Int
 } deriving (Show, Eq, Ord)
+
 
 -- Function that calculates the euclidean distance between two points.
 -- Parameters:
@@ -31,6 +33,7 @@ dist :: Point -> Point -> Double
 dist p1 p2 = sqrt sumOfSquares
     where
         sumOfSquares = sum $ zipWith (\x1 x2 -> (x1-x2)^2) (coords p1) (coords p2)
+
 
 -- Function to find the centroid of a list of points.
 -- Parameters:
@@ -46,6 +49,7 @@ findCentroid points = Point centroidCoords (-1)
         colSum = map sum transposedPointList
         centroidCoords = map (/pointLength) colSum
 
+
 -- Function that finds the sum of the squared euclidean distances (SSE).
 -- Parameters: 
 --      points: [Point] -> List of points to find the SSE from
@@ -54,6 +58,7 @@ findCentroid points = Point centroidCoords (-1)
 --      Double -> Calculated SSE
 sse :: [Point] -> Point -> Double
 sse points centroid = foldl (\acc x -> acc + (dist x centroid)^2) 0 points
+
 
 -- Function that finds the sum of the coordinates of a point.
 -- Parameters:
@@ -80,11 +85,23 @@ findNearest group point = minPoint
         smol = [x | x <- sorted, (snd x) == minDist]
         minPoint = fst $ head $ sortBy (compare `on` fst) smol
 
+-- Function that removes points from a dataset
+-- Parameters:
+--     pointsToBeRemoved: [Point] -> Points that must be removed from the dataset
+--     allPoints: [Point] -> List of all points from the dataset
+-- Result:
+--     [Point] -> Dataset with the points removed
 filterDataset :: [Point] -> [Point] -> [Point]
 filterDataset pointsToBeRemoved allPoints = [x | x <- allPoints, not $ x `elem` pointsToBeRemoved]
 
+-- Function that converts a list of doubles to a list of points
+-- Parameters:
+--     dataset: [[Double]] -> List of lists of doubles to form the points with
+-- Result:
+--     [Point] -> Formed and formatted points
 convertDataset :: [[Double]] -> [Point]
 convertDataset dataset = [Point (fst y) (snd y) | y <- (zip dataset [1..])]
+
 
 -------------------------------------------------------------------------------------------------------------------------------------------
 -- Project specific stuff
@@ -106,6 +123,7 @@ getFirstPoint points = minPoint
         pointsWithMinSum = [x | x <- sorted, (snd x) == minSum]
         minPoint = fst $ head $ sortBy (compare `on` fst) pointsWithMinSum
 
+
 -- Function that finds the second point of the dataset.
 -- This is an auxiliary function, and should be called exclusively from inside getPoints.
 -- Parameters:
@@ -121,6 +139,7 @@ getSecondPoint points initial = maxDistPoint
         maxDist = snd $ last sorted
         pointsWithMaxDist = [x | x <- sorted, (snd x) == maxDist]
         maxDistPoint = fst $ head $ sortBy (compare `on` fst) pointsWithMaxDist
+
 
 -- Function that sets K points as the centroids of the groups, but without considering the first and second points specifically.
 -- This is an auxiliary function, and should be called exclusively from inside getPoints.
@@ -139,6 +158,7 @@ getCentroids points k selected
         dists = map (dist cent) points
         sorted = sortBy (compare `on` snd) $ zip points dists
         furthest = fst $ last sorted
+
 
 -- Function that sets K points as the centroids of the groups. This is the main grouping function.
 -- Parameters:

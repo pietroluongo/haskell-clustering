@@ -20,6 +20,7 @@ data Group = Group {
     points :: [AP.Point]
 } deriving (Show, Eq, Ord)
 
+
 -- Function that adds a list of points to a group
 -- Parameters:
 --     pointsToAdd: [Point] -> Points to be added
@@ -29,6 +30,7 @@ data Group = Group {
 addToGroup :: [AP.Point] -> Group -> Group
 addToGroup pointsToAdd group = Group (centroid group) (points (group) ++ pointsToAdd)
 
+
 -- Function that creates an empty group
 -- Parameters:
 --     point: Point -> Points to be the centroid of the group
@@ -36,6 +38,7 @@ addToGroup pointsToAdd group = Group (centroid group) (points (group) ++ pointsT
 --     Group -> Empty group with the specified centroid
 makeEmptyGroup :: AP.Point -> Group
 makeEmptyGroup point = Group point []
+
 
 -- Function that finds a group given a specified centroid
 -- Parameters:
@@ -45,6 +48,7 @@ makeEmptyGroup point = Group point []
 --     Group -> Group with determined centroid
 findGroupByCentroid :: [Group] -> AP.Point -> Group
 findGroupByCentroid groups cent = head [x | x <- groups, centroid x == cent]
+
 
 -- Function that calculates the total SSE of a group
 -- Parameters:
@@ -71,6 +75,7 @@ groupPointsIter groups cur_iter
         zipped = zip pontos nearestCentroids
         newGroups = groupPoints zipped
         hasChanged = groups /= newGroups
+
 
 -- Function that groups points together. This is the main grouping function.
 -- Parameters:
