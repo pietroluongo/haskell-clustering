@@ -9,7 +9,7 @@ import Data.List
 import Data.Function
 
 -- Constant: Max possible iteration count
-__CONST_MAX_IT = 100
+maxIterations = 100
 
 -- Abstract type "Group"
 -- Fields:
@@ -80,14 +80,14 @@ groupPoints points centroids = finalGroups
 -- This is an auxiliary function and should only be called from inside groupPoints
 -- Parameters:
 --     groups: [Group] -> List of groups in dataset
---     cur_iter: Int -> Current iteration
+--     curIter: Int -> Current iteration
 -- Result:
 --     [Group] -> Resulting group from iteration
 groupPointsIter :: [Group] -> Int -> [Group]
-groupPointsIter groups cur_iter
-    | cur_iter == __CONST_MAX_IT = groups
+groupPointsIter groups curIter
+    | curIter == maxIterations = groups
     | not hasChanged = groups
-    | otherwise = groupPointsIter newGroups (cur_iter+1)
+    | otherwise = groupPointsIter newGroups (curIter+1)
     where
         pontos = concat $ map (points) groups
         updatedCentroids = map AP.findCentroid (map (points) groups)

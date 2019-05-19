@@ -5,10 +5,10 @@ import System.IO
 import Text.Printf
 
 -- Input and output files
-__input_file_k = "./testcases/k.txt"
-__input_file_points = "./testcases/entrada.txt"
-__output_file_groups = "./output/saida.txt"
-__output_file_res = "./output/result.txt"
+inputFileK = "./k.txt"
+inputFilePoints = "./entrada.txt"
+outputFileGroups = "./saida.txt"
+outputFileRes = "./result.txt"
 
 -- Function that formats output for proper display
 -- Parameters:
@@ -24,12 +24,12 @@ formatOuput groups = formatted
 
 
 main = do   putStrLn "Main called"
-            readK <- readFile __input_file_k
-            readP <- readFile __input_file_points
+            readK <- readFile inputFileK
+            readP <- readFile inputFilePoints
             let dataset = map (map (read::String->Double)) (map (words) (lines readP))
             let k = read readK :: Int
             let centroids = findCentroidsFromDataset dataset k
             let finalGroups = groupPoints (convertDataset dataset) centroids
-            writeFile __output_file_res $ printf "%.4f" (getTotalSSE finalGroups)
-            writeFile __output_file_groups $ formatOuput $ finalGroups
+            writeFile outputFileRes $ printf "%.4f" (getTotalSSE finalGroups)
+            writeFile outputFileGroups $ formatOuput $ finalGroups
             return()
