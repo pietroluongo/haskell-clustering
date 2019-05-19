@@ -29,11 +29,7 @@ main = do   putStrLn "Main called"
             let dataset = map (map (read::String->Double)) (map (words) (lines readP))
             let k = read readK :: Int
             let centroids = findCentroidsFromDataset dataset k
-            let conv = convertDataset dataset
-            let baseGroups = groupPointsFirstIter conv centroids
-            let finalGroups = groupPointsIter baseGroups 0
-            let outputString = formatOuput $ finalGroups
-            let sse = getTotalSSE finalGroups
-            writeFile __output_file_res $ printf "%.4f" sse
-            writeFile __output_file_groups outputString
+            let finalGroups = groupPoints (convertDataset dataset) centroids
+            writeFile __output_file_res $ printf "%.4f" (getTotalSSE finalGroups)
+            writeFile __output_file_groups $ formatOuput $ finalGroups
             return()

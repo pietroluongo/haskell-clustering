@@ -1,20 +1,20 @@
 module Algebra.Group (
     Group(..),
-    makeEmptyGroup,
-    findGroupByCentroid,
-    groupPoints,
-    updateGroups,
     getTotalSSE,
-    groupPointsFirstIter,
-    groupPointsIter
+    groupPoints
 ) where
 
 import qualified Algebra.Point as AP
 import Data.List
 import Data.Function
 
+-- Constant: Max possible iteration count
 __CONST_MAX_IT = 100
 
+-- Abstract type "Group"
+-- Fields:
+--     centroid: Point -> Centroid from the group.
+--     points: [Point] -> Points that compose the group.
 data Group = Group {
     centroid :: AP.Point,
     points :: [AP.Point]
@@ -62,7 +62,27 @@ getTotalSSE groups = total
         total = sum a
 
 
---FIXME
+-- Function that forms groups. This is the main grouping function.
+-- Parameters:
+--     points: [Point] -> List of points to be grouped
+--     centroids: [Point] -> List of centroids that groups should be formed around
+-- Result:
+--     [Group] -> Formed groups after all required iterations
+groupPoints :: [AP.Point] -> [AP.Point] -> [Group]
+groupPoints points centroids = finalGroups
+    where
+        zipped = zip points (map (AP.findNearest centroids) points)
+        groups = updateGroups zipped
+        finalGroups = groupPointsIter groups 0
+
+
+-- Function that updates groups iteractively.
+-- This is an auxiliary function and should only be called from inside groupPoints
+-- Parameters:
+--     groups: [Group] -> List of groups in dataset
+--     cur_iter: Int -> Current iteration
+-- Result:
+--     [Group] -> Resulting group from iteration
 groupPointsIter :: [Group] -> Int -> [Group]
 groupPointsIter groups cur_iter
     | cur_iter == __CONST_MAX_IT = groups
@@ -73,45 +93,18 @@ groupPointsIter groups cur_iter
         updatedCentroids = map AP.findCentroid (map (points) groups)
         nearestCentroids = (map (AP.findNearest updatedCentroids) pontos)
         zipped = zip pontos nearestCentroids
-        newGroups = groupPoints zipped
+        newGroups = updateGroups zipped
         hasChanged = groups /= newGroups
 
 
--- Function that groups points together. This is the main grouping function.
--- Parameters:
---     points: [[(Point, Point)]] -> (Point, Centroid) - Points that must be grouped with their respective centroid
--- Result:
---     [Group] -> Calculated groups
--- FIXME
-groupPointsFirstIter :: [AP.Point] -> [AP.Point] -> [Group]
-groupPointsFirstIter points centroids = groups
-    where
-        zipped = zip points (map (AP.findNearest centroids) points)
-        groups = groupPoints zipped
-
-
 -- Function that groups points together.
+-- This is an auxiliary function that should only be called from inside groupPoints
 -- Parameters:
 --     points: [[(Point, Point)]] -> (Point, Centroid) - Points that must be grouped with their respective centroid
 -- Result:
 --     [Group] -> Calculated groups
--- FIXME
-groupPoints :: [(AP.Point, AP.Point)] -> [Group]
-groupPoints points = z
+updateGroups :: [(AP.Point, AP.Point)] -> [Group]
+updateGroups points = grouped
     where
-        x = groupBy ((==) `on` snd) (sortBy (compare `on` snd) points)
-        z = updateGroups x
-
--- Function that updates a group with a list of points
--- Parameters:
---     info: [[(Point, Point)]] -> (Point, Centroid) - Makes a group with a Centroid and adds Point to it. 
---                                                     The tuples must be sorted and grouped beforehand.
--- Result:
---     [Group] -> List of groups that have the determined centroids
--- FIXME
-updateGroups :: [[(AP.Point, AP.Point)]] -> [Group]
-updateGroups dados = c
-    where
-        a = head $ tail dados
-        b = Group (snd $ head a) [fst x | x <- a]
-        c = map (\q -> Group (snd $ head q) [fst x | x <- q]) dados
+        dados = groupBy ((==) `on` snd) (sortBy (compare `on` snd) points)
+        grouped = map (\tuple -> Group (snd $ head tuple) [fst x | x <- tuple]) dados

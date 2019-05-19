@@ -16,7 +16,7 @@ import Data.Function
 
 -- Abstract type "Point"
 -- Fields:
---      coords: [Double] -> List of coordinates. Element i represents the coordinate of the point on the i-th dimension.
+--     coords: [Double] -> List of coordinates. Element i represents the coordinate of the point on the i-th dimension.
 data Point = Point {
     coords     :: [Double],
     identifier :: Int
