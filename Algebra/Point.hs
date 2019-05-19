@@ -11,7 +11,6 @@ module Algebra.Point (
 ) where
 
 import Data.List
-import Utils
 import Data.Function
 
 -- Abstract type "Point"
@@ -134,7 +133,7 @@ getSecondPoint points initial = maxDistPoint
 getCentroids :: (Eq a, Num a) => [Point] -> a -> [Point] -> [Point]
 getCentroids points k selected
     | k == 0 = []
-    | otherwise = furthest:getCentroids (remove points furthest) (k-1) (furthest:selected)
+    | otherwise = furthest:getCentroids (delete furthest points) (k-1) (furthest:selected)
     where
         cent = findCentroid selected
         dists = map (dist cent) points
@@ -159,5 +158,5 @@ findCentroidsFromDataset dataset k
         _dataset = [Point (fst y) (snd y) | y <- z]
         firstPoint = getFirstPoint _dataset
         secondPoint = getSecondPoint _dataset firstPoint
-        filteredDataset' = remove _dataset firstPoint
-        filteredDataset = remove filteredDataset' secondPoint
+        filteredDataset' = delete firstPoint _dataset
+        filteredDataset = delete secondPoint filteredDataset'
